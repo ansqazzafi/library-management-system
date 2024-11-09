@@ -1,5 +1,6 @@
 import {
   ConflictException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -84,9 +85,6 @@ export class AuthService {
   public async refreshToken(
     refreshToken: string,
   ): Promise<{message:string,  accessToken: string; refreshToken: string }> {
-    try {
-        console.log("refreshToken:" , refreshToken);
-        
       const decodedToken = await this.jwtService.verifyAsync(refreshToken, {
         secret: process.env.REFRESH_KEY,
       });
@@ -96,8 +94,12 @@ export class AuthService {
       if (!user || user.refreshToken !== refreshToken) {
         throw new UnauthorizedException('Invalid refresh token');
       }
+
       const accessToken = await this.generateAccessToken(user);
       const newRefreshToken = await this.generateRefreshToken(user);
+      if(!accessToken || !newRefreshToken){
+        throw new ForbiddenException("there is an issue with tokens")
+      }
       user.refreshToken = newRefreshToken;
       await user.save();
       return {
@@ -105,9 +107,6 @@ export class AuthService {
         accessToken,
         refreshToken: newRefreshToken,
       };
-    } catch (error) {
-      throw new UnauthorizedException('Invalid or expired refresh token');
-    }
   }
   
 }

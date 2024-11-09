@@ -4,9 +4,13 @@ import { GenreEnum } from '../enums.genere';
 @Injectable()
 export class GenreValidationPipe implements PipeTransform {
   transform(value: any) {
-    if (!Object.values(GenreEnum).includes(value.genre.toUpperCase())) {
-      throw new BadRequestException(`Genre ${value.genre} is invalid`);
-    }
-    return value;
+    console.log("value are" ,value);
+    
+
+    if (value && value.genre && !Object.values(GenreEnum).includes(value.genre)) {
+        throw new BadRequestException(`Genre ${value.genre} is invalid`);
+      }
+
+    return value; 
   }
 }
