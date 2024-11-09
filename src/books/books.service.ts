@@ -6,14 +6,17 @@ import { CreateBookDto } from './createbook.dto';
 @Injectable()
 export class BooksService {
     constructor(
-        @InjectModel(Book.name) private userModel: Model<BookDocument>
+        @InjectModel(Book.name) private BookModel: Model<BookDocument>
     ){}
 
 
     public async createBook(CreateBookDto:CreateBookDto):Promise<{message:string , Book:Book}>{
         try {
-            const book = await this.userModel.create(CreateBookDto)
+            console.log(CreateBookDto.genre , "ge");
+            const book = await this.BookModel.create(CreateBookDto)
             await book.save()
+            console.log("book are" , book);
+            
             return {
                 message:"Book created Successfully",
                 Book:book

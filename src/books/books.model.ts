@@ -18,6 +18,7 @@ export class Book {
     publishedDate: Date;
 
     @IsEnum(GenreEnum)
+    @Prop({required:true})
     genre: GenreEnum;
 
     @Prop({ required: true })
