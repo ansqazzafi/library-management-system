@@ -8,8 +8,10 @@ import {
   Put,
   Param,
   Get,
-  Query
+  Query,
+  UseInterceptors
 } from '@nestjs/common';
+
 import { GenreValidationPipe } from './CustomPipesForBooks/genre-validation.pipe';
 import { CreateBookDto } from './createbook.dto';
 import { Book } from './books.model';
@@ -18,6 +20,7 @@ import { VerifyAdminGuard } from './Guard/verifyAdmin.guard';
 import { UpdateBookDto } from './updateBook.dto';
 import { PaginationPipe } from './CustomPipesForBooks/pagination.pipe';
 import { CustomNotFoundException } from './CustomExceptions/customNotFountException.filter';
+import { VerifyJwtInterceptor } from './Interceptor/verifyJwt.interceptor';
 @Controller('api/books')
 export class BooksController {
   constructor(private readonly bookService: BooksService) {}
@@ -68,11 +71,13 @@ export class BooksController {
 
 
   @Post('borrowBook/:userId/:bookId')
+  @UseInterceptors(VerifyJwtInterceptor)
   public async borrowBook(@Param('userId') userId:string , @Param('bookId') bookId:string):Promise<string>{
     return await this.bookService.borrowBook(userId , bookId)
   }
 
   @Post('returnBook/:userId/:bookId')
+  @UseInterceptors(VerifyJwtInterceptor)
   public async returnBook(@Param('userId') userId:string , @Param('bookId') bookId:string):Promise<string>{
     return await this.bookService.returnBook(userId , bookId)
   }
