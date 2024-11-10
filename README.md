@@ -1,99 +1,132 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Library Management System
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Overview
+This **Library Management System** was developed to streamline library operations by enabling users to manage book collections, borrow and return books, and secure access via authentication. It includes advanced features such as role-based access control, data validation, and centralized error handling.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+### Key Features
+- **Authentication and Authorization**: Implemented role-based access control (admin and user) using JWT tokens. Only authenticated admins can create, update, or delete books, while authenticated users can view and borrow books. Expired tokens prompt re-authentication.
+- **Custom Pipes**: Created custom validation pipes for data sanitization and validation on DTOs, such as `GenreValidationPipe`, `PaginationPipe`, and `HashPasswordPipe`.
+- **Custom Exception Filters**: Defined `CustomNotFoundException` and other global filters to manage errors systematically.
+- **Guards**: `VerifyAdminGuard` ensures only admins can modify book data.
+- **Interceptor**: `VerifyJwtInterceptor` to verify user jwt before borrow or returning a book
+- **MONGO DB** : implemented two schemas models For user and other for books 
+- **API Testing**: All endpoints were tested with Postman, and Jest testing is underway.
 
-## Description
+## Development Timeline
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- **Day 3**: Implemented core features, including user registration, book creation, updates, and borrow/return functionalities.
+- **Day 4-6**: Enhanced the system with custom validation pipes,custom exception handling, global filters, and pagination for book listings.EndPoints testing with Postman, unit test with jest (working on it)
 
-## Project setup
+---
 
-```bash
-$ npm install
-```
+## API Endpoints
 
-## Compile and run the project
 
-```bash
-# development
-$ npm run start
+### **Authentication**
 
-# watch mode
-$ npm run start:dev
+1. **Register a User**
+   - **URL**: `http://localhost:3000/auth/registerUser`
+   - **Method**: `POST`
+   - **Description**: Registers a new user.
+    - **Request Body**:
+     ```json
+     {
+       "firstName": "Ans",
+       "lastName": "Qazzafi",
+       "email": "ans@gmail.com",
+       "password": "11111111",
+       "role": "role", // default are user
+      
+     }
+     ```
 
-# production mode
-$ npm run start:prod
-```
+2. **Login**
+   - **URL**: `http://localhost:3000/auth/login`
+   - **Method**: `POST`
+   - **Description**: Authenticates a user and returns a JWT tokens and save them in cookies for refreshing or verify.
+    - **Request Body**:
+     ```json
+     {
+       "email": "ans@gmail.com",
+       "password": "11111111",
+     }
 
-## Run tests
+3. **Refresh Token**
+   - **URL**: `http://localhost:3000/auth/refresh-token`
+   - **Method**: `GET`
+   - **Description**: Get token from cookies and verify it if expired then Issues a new token upon expiry of the previous one.
 
-```bash
-# unit tests
-$ npm run test
 
-# e2e tests
-$ npm run test:e2e
+### **Books Management**
 
-# test coverage
-$ npm run test:cov
-```
+1. **Create a Book** (Admin Only)
+   - **URL**: `http://localhost:3000/books/createBook`
+   - **Method**: `POST`
+   - **Description**: Creates a new book entry.
+   - **Request Body**:
+     ```json
+     {
+       "bookName": "Adventure in Wonderland",
+       "bookDescription": "An engaging adventure novel.",
+       "authorName": "John Doe",
+       "publishedDate": "2022-05-20",
+       "genre": "FANTASY", // genre must be from defined Enum
+       "numberOfCopiesAvailable": 50
+     }
+     ```
 
-## Deployment
+2. **Update a Book** (Admin Only)
+   - **URL**: `http://localhost:3000/books/updateBook/:bookid`
+   - **Method**: `PUT`
+   - **Description**: Updates details of an existing book.
+   - **Parameters**: `:id` - Book ID
+   - **requestBody**:
+   ```json
+   {
+    "autherName":"Luke"
+   }
+   ```
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+3. **Delete a Book** (Admin Only)
+   - **URL**: `http://localhost:3000/books/deleteBook/:bookid`
+   - **Method**: `DELETE`
+   - **Description**: Removes a book from the library.
+   - **Parameters**: `:id` - Book ID
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+4. **List All Books**
+   - **URL**: `http://localhost:3000/books/list?page=page&limit=limit`
+   - **Method**: `GET`
+   - **Description**: Fetches a paginated list of books.
+   - **Query Parameters**:
+     - `page`: Page number
+     - `limit`: Number of items per page
 
-```bash
-$ npm install -g mau
-$ mau deploy
-```
+5. **Search Book by Name**
+   - **URL**: `http://localhost:3000/books/findByName?name=:name`
+   - **Method**: `GET`
+   - **Description**: Finds books by name or partial name.
+   - **Query Parameters**: `name` - Book name
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+6. **Borrow a Book**
+   - **URL**: `http://localhost:3000/books/borrowBook/:userId/:bookId`
+   - **Method**: `POST`
+   - **Description**: Allows a user to borrow a book.
+   - **Parameters**:
+     - `userId`: User ID
+     - `bookId`: Book ID
 
-## Resources
+7. **Return a Book**
+   - **URL**: `http://localhost:3000/books/returnBook/:userId/:bookId`
+   - **Method**: `POST`
+   - **Description**: Allows a user to return a borrowed book.
+   - **Parameters**:
+     - `userId`: User ID
+     - `bookId`: Book ID
 
-Check out a few resources that may come in handy when working with NestJS:
+---
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
 
-## Support
+---
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
 
-## Stay in touch
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).

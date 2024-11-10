@@ -16,7 +16,14 @@ import { BookSchema } from './books/books.model';
     ConfigModule.forRoot({
         isGlobal: true,
       }),
-    MongooseModule.forRoot('mongodb://localhost:27017/Users'),
+    // MongooseModule.forRoot('mongodb://localhost:27017/Users'),
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule], 
+      useFactory: async (configService: ConfigService) => ({
+        uri: configService.get<string>('MONGO_URI'), 
+      }),
+      inject: [ConfigService],
+    }),
     MongooseModule.forFeature([{name:User.name , schema:UserSchema}]),
     MongooseModule.forFeature([{name:Book.name , schema:BookSchema}])
     ,AuthModule, BooksModule],
