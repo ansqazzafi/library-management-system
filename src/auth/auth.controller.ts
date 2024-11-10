@@ -19,7 +19,7 @@ import { Response, Request } from 'express';
 import { PassThrough } from 'stream';
 import { CheckRefreshTokenPipe } from './CustomPipesForAuth/check-refresh-token.pipe';
 
-@Controller('auth')
+@Controller('api/auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
   @Post('registerUser')

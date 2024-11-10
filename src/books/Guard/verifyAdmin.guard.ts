@@ -35,7 +35,7 @@ export class VerifyAdminGuard implements CanActivate {
       if (error instanceof TokenExpiredError) {
         throw new UnauthorizedException('Token has expired');
       }
-      throw new ForbiddenException('Invalid token or access denied');
+      throw new ForbiddenException('Access denied Only Admin can Perform this Action');
     }
   }
 }

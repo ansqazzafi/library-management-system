@@ -25,7 +25,7 @@ This **Library Management System** was developed to streamline library operation
 ### **Authentication**
 
 1. **Register a User**
-   - **URL**: `http://localhost:3000/auth/registerUser`
+   - **URL**: `http://localhost:3000/api/auth/registerUser`
    - **Method**: `POST`
    - **Description**: Registers a new user.
     - **Request Body**:
@@ -41,7 +41,7 @@ This **Library Management System** was developed to streamline library operation
      ```
 
 2. **Login**
-   - **URL**: `http://localhost:3000/auth/login`
+   - **URL**: `http://localhost:3000/api/auth/login`
    - **Method**: `POST`
    - **Description**: Authenticates a user and returns a JWT tokens and save them in cookies for refreshing or verify.
     - **Request Body**:
@@ -52,7 +52,7 @@ This **Library Management System** was developed to streamline library operation
      }
 
 3. **Refresh Token**
-   - **URL**: `http://localhost:3000/auth/refresh-token`
+   - **URL**: `http://localhost:3000/api/auth/refresh-token`
    - **Method**: `GET`
    - **Description**: Get token from cookies and verify it if expired then Issues a new token upon expiry of the previous one.
 
@@ -60,7 +60,7 @@ This **Library Management System** was developed to streamline library operation
 ### **Books Management**
 
 1. **Create a Book** (Admin Only)
-   - **URL**: `http://localhost:3000/books/createBook`
+   - **URL**: `http://localhost:3000/api/books/createBook`
    - **Method**: `POST`
    - **Description**: Creates a new book entry.
    - **Request Body**:
@@ -76,7 +76,7 @@ This **Library Management System** was developed to streamline library operation
      ```
 
 2. **Update a Book** (Admin Only)
-   - **URL**: `http://localhost:3000/books/updateBook/:bookid`
+   - **URL**: `http://localhost:3000/api/books/updateBook/:bookid`
    - **Method**: `PUT`
    - **Description**: Updates details of an existing book.
    - **Parameters**: `:id` - Book ID
@@ -88,13 +88,13 @@ This **Library Management System** was developed to streamline library operation
    ```
 
 3. **Delete a Book** (Admin Only)
-   - **URL**: `http://localhost:3000/books/deleteBook/:bookid`
+   - **URL**: `http://localhost:3000/api/books/deleteBook/:bookid`
    - **Method**: `DELETE`
    - **Description**: Removes a book from the library.
    - **Parameters**: `:id` - Book ID
 
 4. **List All Books**
-   - **URL**: `http://localhost:3000/books/list?page=page&limit=limit`
+   - **URL**: `http://localhost:3000/api/books/list?page=page&limit=limit`
    - **Method**: `GET`
    - **Description**: Fetches a paginated list of books.
    - **Query Parameters**:
@@ -102,13 +102,13 @@ This **Library Management System** was developed to streamline library operation
      - `limit`: Number of items per page
 
 5. **Search Book by Name**
-   - **URL**: `http://localhost:3000/books/findByName?name=:name`
+   - **URL**: `http://localhost:3000/api/books/findByName?name=:name`
    - **Method**: `GET`
    - **Description**: Finds books by name or partial name.
    - **Query Parameters**: `name` - Book name
 
 6. **Borrow a Book**
-   - **URL**: `http://localhost:3000/books/borrowBook/:userId/:bookId`
+   - **URL**: `http://localhost:3000/api/books/borrowBook/:userId/:bookId`
    - **Method**: `POST`
    - **Description**: Allows a user to borrow a book.
    - **Parameters**:
@@ -116,7 +116,7 @@ This **Library Management System** was developed to streamline library operation
      - `bookId`: Book ID
 
 7. **Return a Book**
-   - **URL**: `http://localhost:3000/books/returnBook/:userId/:bookId`
+   - **URL**: `http://localhost:3000/api/books/returnBook/:userId/:bookId`
    - **Method**: `POST`
    - **Description**: Allows a user to return a borrowed book.
    - **Parameters**:

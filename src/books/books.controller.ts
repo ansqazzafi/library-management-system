@@ -18,7 +18,7 @@ import { VerifyAdminGuard } from './Guard/verifyAdmin.guard';
 import { UpdateBookDto } from './updateBook.dto';
 import { PaginationPipe } from './CustomPipesForBooks/pagination.pipe';
 import { CustomNotFoundException } from './CustomExceptions/customNotFountException.filter';
-@Controller('books')
+@Controller('api/books')
 export class BooksController {
   constructor(private readonly bookService: BooksService) {}
 
