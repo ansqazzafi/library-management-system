@@ -42,6 +42,7 @@ export class AuthController {
       secure: true,
     };
 
+    
     response.cookie('accessToken', loggedUser.accessToken, Options);
     response.cookie('refreshToken', loggedUser.refreshToken, Options);
     return {
@@ -58,7 +59,6 @@ export class AuthController {
     @Res({ passthrough: true }) response: Response,
   ): Promise<{ message: string; accessToken: string; refreshToken: string }> {
     const refreshTokenfromCookie = request.cookies['refreshToken'];
-    console.log('Controler:', refreshTokenfromCookie);
 
     const Respond=
       await this.authService.refreshToken(refreshTokenfromCookie);

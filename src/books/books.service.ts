@@ -17,11 +17,9 @@ export class BooksService {
   public async createBook(
     CreateBookDto: CreateBookDto,
   ): Promise<{ message: string; Book: Book }> {
-    console.log(CreateBookDto.genre, 'ge');
+   
     const book = await this.BookModel.create(CreateBookDto);
     await book.save();
-    console.log('book are', book);
-
     return {
       message: 'Book created Successfully',
       Book: book,

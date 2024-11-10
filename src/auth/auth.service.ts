@@ -22,13 +22,9 @@ export class AuthService {
   ) {}
 
   private async generateAccessToken(user): Promise<string> {
-    console.log(user._id , "user");
     const payload = {id:user._id ,firstName:user.firstName , lastName:user.lastName , email: user.email, role: user.role };
-    console.log("Payload:" , payload);
-    
     const secretKey = process.env.ACCESS_KEY;
-    console.log("seceret:" , secretKey);
-    
+
     const expiresIn = process.env.ACCESS_KEY_EXPIRE || '30s';
     return this.jwtService.signAsync(payload, { secret: secretKey, expiresIn });
   }
@@ -42,12 +38,8 @@ export class AuthService {
 
   public async RegisterUser(registerUserDto: RegisterUserDto): Promise<User> {
     const existingUser = await this.userModel.findOne({email: registerUserDto.email});
-    console.log(existingUser , "dsdsd");
-    
-
     if (existingUser) {
       console.log("enter");
-      
       throw new ConflictException('Email already exists'); 
     }
     const user = await this.userModel.create(registerUserDto);
@@ -69,14 +61,11 @@ export class AuthService {
     if (!isPasswordCorrect) {
       throw new UnauthorizedException('password didnt matched');
     }
-    const id=user._id
+  
     
     
     const accessToken = await this.generateAccessToken(user)
-    console.log("access" , accessToken);
     const refreshToken = await this.generateRefreshToken(user)
-    console.log(refreshToken);
-
     user.refreshToken = refreshToken;
     await user.save();
 
@@ -98,8 +87,6 @@ export class AuthService {
         secret: process.env.REFRESH_KEY,
       });
       const user = await this.userModel.findById(decodedToken.id);
-      console.log("user found:" , user);
-      
       if (!user || user.refreshToken !== refreshToken) {
         throw new UnauthorizedException('Invalid refresh token');
       }

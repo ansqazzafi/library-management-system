@@ -28,8 +28,6 @@ export class BooksController {
   public async createBook(
     @Body() createBookDto: CreateBookDto,
   ): Promise<{ message: string; Book: Book }> {
-    console.log('genre', createBookDto.genre);
-
     return await this.bookService.createBook(createBookDto);
   }
 
