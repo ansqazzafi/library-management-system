@@ -69,6 +69,17 @@ export class BooksController {
   }
 
 
+  @Post('borrowBook/:userId/:bookId')
+  public async borrowBook(@Param('userId') userId:string , @Param('bookId') bookId:string):Promise<string>{
+    return await this.bookService.borrowBook(userId , bookId)
+  }
+
+  @Post('returnBook/:userId/:bookId')
+  public async returnBook(@Param('userId') userId:string , @Param('bookId') bookId:string):Promise<string>{
+    return await this.bookService.returnBook(userId , bookId)
+  }
+
+
 
 
 
