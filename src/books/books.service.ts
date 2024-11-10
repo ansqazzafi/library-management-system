@@ -56,5 +56,24 @@ export class BooksService {
     };
   }
 
-  
+  public async listBooks(paginationParams: { page: number; limit: number }) {
+    const { page, limit } = paginationParams;
+    const books = await this.BookModel.find()
+      .skip((page - 1) * limit)
+      .limit(limit);
+
+    const total = await this.BookModel.countDocuments();
+
+    return {
+      data: books,
+      total,
+      page,
+      limit,
+    };
+  }
+
+
+  public async findBookByName(name: string): Promise<Book[]> {
+    return this.BookModel.find({ bookName: { $regex: name, $options: 'i' } }).exec();
+  }
 }
