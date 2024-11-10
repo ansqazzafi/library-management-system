@@ -50,8 +50,17 @@ This **Library Management System** was developed to streamline library operation
        "email": "ans@gmail.com",
        "password": "11111111",
      }
+3. **Logout**
+   - **URL**: `/api/auth/logout`
+   - **Method**: `POST`
+   - **Description**: Logout the User and remove JWT Tokens from cookies
+    - **Request Body**:
+     ```json
+     {
+       "userId": "example"
+     }
 
-3. **Refresh Token**
+4. **Refresh Token**
    - **URL**: `/api/auth/refresh-token`
    - **Method**: `GET`
    - **Description**: Get token from cookies and verify it if expired then Issues a new token upon expiry of the previous one.
