@@ -75,8 +75,6 @@ export class AuthController {
 
   @Post('logout')
   public async logoutUser(@Body() { userId }: { userId: string },  @Res({ passthrough: true }) response: Response): Promise<{message:string , loggedOutUser:User}>  {
-    console.log(userId);
-    
     const responseFromService = await this.authService.logoutUser(userId);
     const Options = {
       httpOnly: true,
