@@ -11,6 +11,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { BooksModule } from './books/books.module';
 import { Book } from './books/books.model';
 import { BookSchema } from './books/books.model';
+import { AppController } from './app.controller';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -27,7 +28,7 @@ import { BookSchema } from './books/books.model';
     MongooseModule.forFeature([{name:User.name , schema:UserSchema}]),
     MongooseModule.forFeature([{name:Book.name , schema:BookSchema}])
     ,AuthModule, BooksModule],
-  controllers: [AuthController , BooksController],
+  controllers: [AuthController , BooksController  , AppController],
   providers: [AuthService , BooksService , JwtService],
 })
 export class AppModule {}
