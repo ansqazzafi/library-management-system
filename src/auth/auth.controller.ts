@@ -16,7 +16,6 @@ import { HashPasswordPipe } from './CustomPipesForAuth/hashPassword.pipe';
 import { AuthService } from './auth.service';
 import { LoginUserDto } from './login-user-dto';
 import { Response, Request } from 'express';
-import { PassThrough } from 'stream';
 import { CheckRefreshTokenPipe } from './CustomPipesForAuth/check-refresh-token.pipe';
 
 @Controller('api/auth')
@@ -36,6 +35,7 @@ export class AuthController {
     @Res({ passthrough: true }) response: Response,
   ): Promise<{ user: User; accessToken: string; refreshToken: string }> {
     const loggedUser = await this.authService.LoginUser(loginUserDto);
+    
 
     const Options = {
       httpOnly: true,

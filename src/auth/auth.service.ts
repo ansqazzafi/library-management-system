@@ -13,13 +13,20 @@ import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
 import { LoginUserDto } from './login-user-dto';
 import * as bcrypt from 'bcrypt';
-import { log } from 'console';
 @Injectable()
 export class AuthService {
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>,
     private readonly jwtService: JwtService,
-  ) {}
+  ) { }
+
+
+  public removeFields(obj: any, fields: string[]): any {
+    const removedFields = { ...obj };
+    fields.forEach(field => delete removedFields[field]);
+    return removedFields;
+  }
+
 
   private async generateAccessToken(user): Promise<string> {
     const payload = {
@@ -50,15 +57,17 @@ export class AuthService {
       console.log('enter');
       throw new ConflictException('Email already exists');
     }
-    const user = await this.userModel.create(registerUserDto);
-    await user.save();
-    return user;
+    const registeredUser = new this.userModel({ ...registerUserDto });
+
+    return await registeredUser.save();
   }
 
   public async LoginUser(
     loginUserDto: LoginUserDto,
   ): Promise<{ user: User; accessToken: string; refreshToken: string }> {
+
     const user = await this.userModel.findOne({ email: loginUserDto.email });
+
 
     if (!user) {
       throw new NotFoundException('User not found');
@@ -67,6 +76,9 @@ export class AuthService {
       loginUserDto.password,
       user.password,
     );
+
+    console.log("IsPasswrd", isPasswordCorrect);
+
 
     if (!isPasswordCorrect) {
       throw new UnauthorizedException('password didnt matched');
@@ -77,9 +89,9 @@ export class AuthService {
     user.refreshToken = refreshToken;
     await user.save();
 
-    const loggedInUser = await this.userModel
-      .findById(user._id)
-      .select('-password -refreshToken');
+
+    const newUser = user.toObject();
+    const loggedInUser = this.removeFields(newUser , ['password'])
 
     return {
       user: loggedInUser,
@@ -88,22 +100,19 @@ export class AuthService {
     };
   }
 
-  public async logoutUser(id: string): Promise<{message:string , loggedOutUser:User}> {
-    let logOutUser = await this.userModel.findOneAndUpdate(
+  public async logoutUser(id: string): Promise<{ message: string, loggedOutUser: User }> {
+    let user = await this.userModel.findOneAndUpdate(
       { _id: id },
       { $unset: { refreshToken: 1 } },
       { new: true },
     );
 
-   logOutUser = await this.userModel
-    .findById(id)
-    .select('-password -refreshToken -borrowedBooks -_id -createdAt -updatedAt -__v');
-
-
+    const newUser = user.toObject();
+    const loggedOutUser = this.removeFields(newUser , ['password' , 'refreshToken' , 'createdAt' , 'updatedAt' , '__v'])
 
     return {
-      message:"User logged Out Succesfully",
-      loggedOutUser:logOutUser
+      message: "User logged Out Succesfully",
+      loggedOutUser: loggedOutUser
     };
   }
 
