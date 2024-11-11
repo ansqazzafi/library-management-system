@@ -77,7 +77,6 @@ export class AuthService {
       user.password,
     );
 
-    console.log("IsPasswrd", isPasswordCorrect);
 
 
     if (!isPasswordCorrect) {
@@ -91,7 +90,7 @@ export class AuthService {
 
 
     const newUser = user.toObject();
-    const loggedInUser = this.removeFields(newUser , ['password'])
+    const loggedInUser = this.removeFields(newUser , ['password' , 'refreshToken'])
 
     return {
       user: loggedInUser,
